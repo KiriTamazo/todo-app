@@ -1,37 +1,35 @@
 import {
   Button,
   Checkbox,
+  Input,
   ListItem,
   ListItemIcon,
   ListItemText,
+  OutlinedInput,
   Stack,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import "./ListItems.scss";
+import { Cancel, Delete, Edit, Save } from "@mui/icons-material";
 
 import React from "react";
 
-const ListItems = ({ todo, handleDelete, handleEdit }) => {
+const ListItems = ({ todo, handleDelete, handleEdit, handleCancle, show }) => {
   return (
     <ListItem
-      sx={{
-        boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-        bgcolor: "background.paper",
-        borderRadius: "5px",
-        minHeight: "80px",
-        margin: "15px 0",
-        padding: "20px",
-        "&:first-of-type": {
-          marginTop: "0",
-        },
-        "&:last-of-type": {
-          marginBottom: "0",
-        },
-      }}
+      className="list-item"
+      sx={{ bgcolor: "background.paper", gap: 3 }}
     >
-      <ListItemIcon>
-        <Checkbox edge="start" tabIndex={-1} disableRipple />
+      <ListItemIcon className="flex-center">
+        <Checkbox size="medium" edge="start" tabIndex={-1} disableRipple />
       </ListItemIcon>
-      <ListItemText primary={`${todo.text} `} />
+      {show ? (
+        <ListItemText primary={`${todo.text} `} />
+      ) : (
+        <Input
+          defaultValue="Hello world"
+          sx={{ padding: "2px", flexGrow: 1 }}
+        />
+      )}
 
       <Stack
         sx={{
@@ -39,16 +37,37 @@ const ListItems = ({ todo, handleDelete, handleEdit }) => {
           gap: "20px",
         }}
       >
-        <Button onClick={handleEdit} variant="contained" color="primary">
-          <Edit />
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => handleDelete(todo.id)}
-        >
-          <Delete />
-        </Button>
+        {show ? (
+          <>
+            <Button
+              onClick={() => handleEdit(todo.id)}
+              variant="contained"
+              color="primary"
+            >
+              <Save />
+            </Button>
+            <Button variant="contained" color="error" onClick={handleCancle}>
+              <Cancel />
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() => handleEdit(todo.id)}
+              variant="contained"
+              color="primary"
+            >
+              <Edit />
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleDelete(todo.id)}
+            >
+              <Delete />
+            </Button>
+          </>
+        )}
       </Stack>
     </ListItem>
   );

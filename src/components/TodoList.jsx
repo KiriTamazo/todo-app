@@ -32,6 +32,7 @@ const TodoList = () => {
   );
 
   const [value, setValue] = useState("");
+  const [updateValue, setUpdateValue] = useState("");
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -51,12 +52,19 @@ const TodoList = () => {
     localStorage.removeItem("items", JSON.stringify(items));
     setTodos([...items]);
   };
-  const handleEdit = () => {
+  const handleEdit = (id) => {
     setShow(true);
+    const item = todos.find((todo) => todo.id !== id);
+    setUpdateValue({ id, text: item.text });
+    console.log(updateValue);
   };
-  const handleUpdate = (id) => {};
+  const handleUpdate = () => {
+    const item = todos.filter((todo) => todo.id === updateValue.id);
+    console.log(item);
+  };
   const handleCancle = () => {
     setShow(false);
+    console.log("Click");
   };
 
   useEffect(() => {
@@ -89,12 +97,17 @@ const TodoList = () => {
         {show ? (
           <>
             <FormControl sx={{ flexGrow: 1 }}>
-              <OutlinedInput value={value} placeholder="Add New Todo Item" />
+              <OutlinedInput
+                onChange={(e) => setUpdateValue({ title: e.target.value })}
+                value={value}
+                placeholder="Add New Todo Item"
+              />
             </FormControl>
             <Stack spacing={2} direction="row">
               <Button
                 onClick={handleUpdate}
                 variant="contained"
+                color="success"
                 className="btn"
               >
                 Update
@@ -102,6 +115,7 @@ const TodoList = () => {
               <Button
                 onClick={handleCancle}
                 variant="contained"
+                color="error"
                 className="btn"
               >
                 Cancle
@@ -146,6 +160,8 @@ const TodoList = () => {
               <ListItems
                 key={index}
                 todo={todo}
+                show={show}
+                handleCancle={handleCancle}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
               />
