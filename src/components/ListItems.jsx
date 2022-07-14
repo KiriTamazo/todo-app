@@ -1,6 +1,7 @@
 import {
   Button,
   Checkbox,
+  ListItem,
   ListItemIcon,
   ListItemText,
   Stack,
@@ -9,7 +10,7 @@ import { Delete, Edit } from "@mui/icons-material";
 
 import React from "react";
 
-const ListItem = () => {
+const ListItems = ({ todo, handleDelete, handleEdit }) => {
   return (
     <ListItem
       sx={{
@@ -18,10 +19,11 @@ const ListItem = () => {
         borderRadius: "5px",
         minHeight: "80px",
         margin: "15px 0",
-        "&:first-child": {
+        padding: "20px",
+        "&:first-of-type": {
           marginTop: "0",
         },
-        "&:last-child": {
+        "&:last-of-type": {
           marginBottom: "0",
         },
       }}
@@ -29,7 +31,7 @@ const ListItem = () => {
       <ListItemIcon>
         <Checkbox edge="start" tabIndex={-1} disableRipple />
       </ListItemIcon>
-      <ListItemText primary={`Line item `} />
+      <ListItemText primary={`${todo.text} `} />
 
       <Stack
         sx={{
@@ -37,10 +39,14 @@ const ListItem = () => {
           gap: "20px",
         }}
       >
-        <Button variant="contained" color="primary">
+        <Button onClick={handleEdit} variant="contained" color="primary">
           <Edit />
         </Button>
-        <Button variant="contained" color="error">
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => handleDelete(todo.id)}
+        >
           <Delete />
         </Button>
       </Stack>
@@ -48,4 +54,4 @@ const ListItem = () => {
   );
 };
 
-export default ListItem;
+export default ListItems;

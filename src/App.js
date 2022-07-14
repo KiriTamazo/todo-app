@@ -7,17 +7,9 @@ import MuiSwitch from "./components/MuiSwitch";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
-  const darkTheme = createTheme({
+  const theme = createTheme({
     palette: {
-      mode: "dark",
-      primary: {
-        main: "#6366f1",
-      },
-    },
-  });
-  const lightTheme = createTheme({
-    palette: {
-      mode: "light",
+      mode: darkMode ? "light" : "dark",
       primary: {
         main: "#6366f1",
       },
@@ -25,7 +17,7 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={darkMode ? lightTheme : darkTheme}>
+    <ThemeProvider theme={theme}>
       <Paper
         className="container"
         component="main"

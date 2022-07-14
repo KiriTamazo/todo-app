@@ -1,32 +1,67 @@
 import {
   Box,
   Button,
+  Stack,
   Container,
   FormControl,
   List,
   OutlinedInput,
-  Stack,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import ListItem from "./ListItem";
+import React, { useEffect, useState } from "react";
+import ListItems from "./ListItems";
 
 const TodoList = () => {
   const [show, setShow] = useState(false);
-  const [todos, setTodos] = useState([
-    { id: 1, text: "Hello! My Frinds" },
-    { id: 2, text: "Hello! My Dear Frinds" },
-    { id: 1, text: "Hello! My Frinds" },
-    { id: 2, text: "Hello! My Dear Frinds" },
-    { id: 1, text: "Hello! My Frinds" },
-    { id: 2, text: "Hello! My Dear Frinds" },
-    { id: 1, text: "Hello! My Frinds" },
-    { id: 2, text: "Hello! My Dear Frinds" },
-    { id: 1, text: "Hello! My Frinds" },
-    { id: 2, text: "Hello! My Dear Frinds" },
-    { id: 1, text: "Hello! My Frinds" },
-    { id: 2, text: "Hello! My Dear Frinds" },
-  ]);
+  const [todos, setTodos] = useState(
+    JSON.parse(localStorage.getItem("items")) ||
+      [
+        // { id: 1, text: "Hello! My Frinds" },
+        // { id: 2, text: "Hello! My Dear Frinds" },
+        // { id: 3, text: "Hello! My Frinds" },
+        // { id: 4, text: "Hello! My Dear Frinds" },
+        // { id: 5, text: "Hello! My Frinds" },
+        // { id: 6, text: "Hello! My Dear Frinds" },
+        // { id: 7, text: "Hello! My Frinds" },
+        // { id: 8, text: "Hello! My Dear Frinds" },
+        // { id: 9, text: "Hello! My Frinds" },
+        // { id: 10, text: "Hello! My Dear Frinds" },
+        // { id: 11, text: "Hello! My Frinds" },
+        // { id: 12, text: "Hello! My Dear Frinds" },
+      ]
+  );
+
+  const [value, setValue] = useState("");
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+  const handleSubmit = (e) => {
+    const id = todos.length ? todos[todos.length - 1].id + 1 : 1;
+    const newItem = { id, text: value };
+    if (value) {
+      setTodos([...todos, newItem]);
+      localStorage.setItem("items", JSON.stringify(todos));
+      setValue("");
+    }
+  };
+
+  const handleDelete = (id) => {
+    const items = todos.filter((todo) => todo.id !== id);
+    localStorage.removeItem("items", JSON.stringify(items));
+    setTodos([...items]);
+  };
+  const handleEdit = () => {
+    setShow(true);
+  };
+  const handleUpdate = (id) => {};
+  const handleCancle = () => {
+    setShow(false);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <Container
@@ -51,25 +86,49 @@ const TodoList = () => {
         }}
         justifyContent="space-between"
       >
-        <FormControl sx={{ flexGrow: 1 }}>
-          <OutlinedInput placeholder="Add New Todo Item" />
-        </FormControl>
-        <Stack spacing={2} direction="row">
-          {show ? (
-            <>
-              <Button variant="contained" className="btn">
+        {show ? (
+          <>
+            <FormControl sx={{ flexGrow: 1 }}>
+              <OutlinedInput value={value} placeholder="Add New Todo Item" />
+            </FormControl>
+            <Stack spacing={2} direction="row">
+              <Button
+                onClick={handleUpdate}
+                variant="contained"
+                className="btn"
+              >
                 Update
               </Button>
-              <Button variant="contained" className="btn">
+              <Button
+                onClick={handleCancle}
+                variant="contained"
+                className="btn"
+              >
                 Cancle
               </Button>
-            </>
-          ) : (
-            <Button variant="contained" className="btn">
-              Add Task
-            </Button>
-          )}
-        </Stack>
+            </Stack>
+          </>
+        ) : (
+          <>
+            <FormControl sx={{ flexGrow: 1 }}>
+              <OutlinedInput
+                value={value}
+                onChange={handleChange}
+                placeholder="Add New Todo Item"
+              />
+            </FormControl>
+
+            <Stack spacing={2} direction="row">
+              <Button
+                variant="contained"
+                className="btn"
+                onClick={handleSubmit}
+              >
+                Add Task
+              </Button>
+            </Stack>
+          </>
+        )}
       </Stack>
       {/* Todo Items List */}
 
@@ -82,8 +141,15 @@ const TodoList = () => {
             padding: "10px 0",
           }}
         >
-          {todos.map((todo, index) => {
-            return <ListItem />;
+          {todos?.map((todo, index) => {
+            return (
+              <ListItems
+                key={index}
+                todo={todo}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            );
           })}
         </List>
       </Stack>
