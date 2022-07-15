@@ -66,8 +66,7 @@ const TodoList = () => {
   };
 
   useEffect(() => {
-    // localStorage.setItem("items", JSON.stringify(todos));
-    localStorage.getItem("items");
+    localStorage.setItem("items", JSON.stringify(todos));
   }, [todos]);
 
   return (
