@@ -5,7 +5,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
   Stack,
 } from "@mui/material";
 import "./ListItems.scss";
@@ -13,7 +12,16 @@ import { Cancel, Delete, Edit, Save } from "@mui/icons-material";
 
 import React from "react";
 
-const ListItems = ({ todo, handleDelete, handleEdit, handleCancle, show }) => {
+const ListItems = ({
+  todo,
+  handleDelete,
+  handleEdit,
+  handleCancle,
+  updateValue,
+  setUpdateValue,
+  handleChange,
+  handleUpdate,
+}) => {
   return (
     <ListItem
       className="list-item"
@@ -22,14 +30,15 @@ const ListItems = ({ todo, handleDelete, handleEdit, handleCancle, show }) => {
       <ListItemIcon className="flex-center">
         <Checkbox size="medium" edge="start" tabIndex={-1} disableRipple />
       </ListItemIcon>
-      {show ? (
-        <ListItemText primary={`${todo.text} `} />
-      ) : (
+
+      {todo.status === true && (
         <Input
-          defaultValue="Hello world"
+          onChange={(e) => setUpdateValue(e.target.value)}
+          value={updateValue}
           sx={{ padding: "2px", flexGrow: 1 }}
         />
       )}
+      {todo.status === false && <ListItemText primary={`${todo.text} `} />}
 
       <Stack
         sx={{
@@ -37,16 +46,20 @@ const ListItems = ({ todo, handleDelete, handleEdit, handleCancle, show }) => {
           gap: "20px",
         }}
       >
-        {show ? (
+        {todo.status === true ? (
           <>
             <Button
-              onClick={() => handleEdit(todo.id)}
+              onClick={() => handleUpdate(todo.id)}
               variant="contained"
-              color="primary"
+              color="success"
             >
               <Save />
             </Button>
-            <Button variant="contained" color="error" onClick={handleCancle}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleCancle(todo.id)}
+            >
               <Cancel />
             </Button>
           </>
