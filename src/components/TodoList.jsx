@@ -10,14 +10,17 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ListItems from "./ListItems";
+import MuiSwitch from "./MuiSwitch";
 
-const TodoList = () => {
+const TodoList = ({ darkMode, setDarkMode }) => {
+  
   const [todos, setTodos] = useState(
     JSON.parse(localStorage.getItem("items")) || []
   );
 
   const [value, setValue] = useState("");
   const [updateValue, setUpdateValue] = useState("");
+
   const handleChange = (e) => {
     setValue(e.target.value);
   };
@@ -73,7 +76,7 @@ const TodoList = () => {
     <Container
       component="section"
       sx={{
-        // backgroundColor: "#eeeeee87",
+        position: "relative",
         padding: "20px",
         borderRadius: "5px",
       }}
@@ -134,6 +137,14 @@ const TodoList = () => {
           })}
         </List>
       </Stack>
+
+      <MuiSwitch
+        sx={{ position: "absolute", top: "8%", right: "1%" }}
+        checked={!darkMode}
+        onChange={() => setDarkMode(!darkMode)}
+      >
+        Dark Mode
+      </MuiSwitch>
     </Container>
   );
 };

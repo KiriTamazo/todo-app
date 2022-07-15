@@ -27,14 +27,7 @@ function App() {
           transition: "all .4s linear",
         }}
       >
-        <TodoList />
-        <MuiSwitch
-          sx={{ position: "absolute", top: "3%", right: "1%" }}
-          checked={!darkMode}
-          onChange={() => setDarkMode(!darkMode)}
-        >
-          Dark Mode
-        </MuiSwitch>
+        <TodoList darkMode={darkMode} setDarkMode={setDarkMode} />
       </Paper>
     </ThemeProvider>
   );
