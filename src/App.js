@@ -3,7 +3,6 @@ import { Paper } from "@mui/material";
 
 import { useState } from "react";
 import TodoList from "./components/TodoList";
-import MuiSwitch from "./components/MuiSwitch";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
