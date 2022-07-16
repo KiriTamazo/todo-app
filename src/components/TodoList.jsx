@@ -7,16 +7,30 @@ import {
   List,
   OutlinedInput,
   Typography,
+  Skeleton,
+  ListItem,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ListItems from "./ListItems";
 import MuiSwitch from "./MuiSwitch";
+import instance from "../axios/instance";
+import useAxiosFunction from "../axios/useAxiosFunction";
+import useAxios from "../axios/useAxios";
+import Loading from "./loading/Loading";
 
 const TodoList = ({ darkMode, setDarkMode }) => {
-  
-  const [todos, setTodos] = useState(
-    JSON.parse(localStorage.getItem("items")) || []
-  );
+  const [posts, loading, error] = useAxios({
+    axiosInstance: instance,
+    method: "get",
+    url: "/posts",
+  });
+  console.log(posts);
+
+  useEffect(() => {
+    setTodos(posts);
+  }, [posts]);
+
+  const [todos, setTodos] = useState([]);
 
   const [value, setValue] = useState("");
   const [updateValue, setUpdateValue] = useState("");
@@ -24,21 +38,20 @@ const TodoList = ({ darkMode, setDarkMode }) => {
   const handleChange = (e) => {
     setValue(e.target.value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     const newId = todos.length ? todos[todos.length - 1].id + 1 : 1;
     const newItem = { id: newId, text: value, status: false };
     if (value) {
       setTodos([...todos, newItem]);
-      localStorage.setItem("items", JSON.stringify(todos));
       setValue("");
     }
-    console.log(newItem);
+    instance.post("/posts", newItem);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const items = todos.filter((todo) => todo.id !== id);
-    localStorage.removeItem("items", JSON.stringify(items));
-    setTodos([...items]);
+    setTodos(items);
+    await instance.delete(`/posts/${id}`);
   };
 
   const handleEdit = (id) => {
@@ -51,26 +64,24 @@ const TodoList = ({ darkMode, setDarkMode }) => {
     setTodos(updateItem);
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = async (id) => {
     const updateItem = todos.map((todo) => {
       return todo.id === id
         ? { ...todo, text: updateValue, status: false }
         : todo;
     });
     setTodos(updateItem);
-    localStorage.setItem("items", JSON.stringify(updateItem));
+    const items = updateItem.find((item) => item.id === id);
+    await instance.put(`/posts/${id}`, items);
   };
 
   const handleCancle = (id) => {
     const updateItem = todos.map((todo) =>
       todo.id === id ? { ...todo, status: false } : todo
     );
+
     setTodos(updateItem);
   };
-
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(todos));
-  }, [todos]);
 
   return (
     <Container
@@ -120,26 +131,37 @@ const TodoList = ({ darkMode, setDarkMode }) => {
             padding: "10px 0",
           }}
         >
-          {todos?.map((todo, index) => {
-            return (
-              <ListItems
-                key={index}
-                todo={todo}
-                updateValue={updateValue}
-                setUpdateValue={setUpdateValue}
-                handleChange={handleChange}
-                handleCancle={handleCancle}
-                handleDelete={handleDelete}
-                handleEdit={handleEdit}
-                handleUpdate={handleUpdate}
-              />
-            );
-          })}
+          {loading && (
+            <>
+              <Loading />
+              <Loading />
+              <Loading />
+            </>
+          )}
+          {!todos && todos.length === 0 && !loading && (
+            <ListItem>No List Item</ListItem>
+          )}
+          {!loading &&
+            todos?.map((todo, index) => {
+              return (
+                <ListItems
+                  key={index}
+                  todo={todo}
+                  updateValue={updateValue}
+                  setUpdateValue={setUpdateValue}
+                  handleChange={handleChange}
+                  handleCancle={handleCancle}
+                  handleDelete={handleDelete}
+                  handleEdit={handleEdit}
+                  handleUpdate={handleUpdate}
+                />
+              );
+            })}
         </List>
       </Stack>
 
       <MuiSwitch
-        sx={{ position: "absolute", top: "8%", right: "1%" }}
+        sx={{ position: "absolute", top: "20px", right: "20px" }}
         checked={!darkMode}
         onChange={() => setDarkMode(!darkMode)}
       >
