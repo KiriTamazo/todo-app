@@ -1,33 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
+import { initialState, reducer } from "../reducer/reducer";
 
 const useAxios = (configObj) => {
   const { axiosInstance, method, url, requestConfig = {} } = configObj;
 
-  const [response, setResponse] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const controller = new AbortController();
-    console.log(controller);
     const fetchData = async () => {
       try {
         const res = await axiosInstance[method.toLowerCase()](url, {
           ...requestConfig,
           signal: controller.signal,
         });
-        console.log(res);
-        setResponse(res.data);
+        console.log(res.data, state);
+        dispatch({ type: "success", payload: res.data });
       } catch (err) {
-        setError(err);
+        dispatch({ type: "error", payload: err.message });
       } finally {
-        setLoading(false);
+        dispatch({ type: "loading", payload: false });
       }
     };
     fetchData();
     return () => controller.abort();
   }, [axiosInstance, method, url]);
 
-  return [response, loading, error];
+  return [state];
 };
 export default useAxios;

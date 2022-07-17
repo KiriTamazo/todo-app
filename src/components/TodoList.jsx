@@ -7,28 +7,31 @@ import {
   List,
   OutlinedInput,
   Typography,
-  Skeleton,
   ListItem,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ListItems from "./ListItems";
 import MuiSwitch from "./MuiSwitch";
 import instance from "../axios/instance";
-import useAxiosFunction from "../axios/useAxiosFunction";
 import useAxios from "../axios/useAxios";
 import Loading from "./loading/Loading";
 
-const TodoList = ({ darkMode, setDarkMode }) => {
-  const [posts, loading, error] = useAxios({
+const TodoList1 = ({ darkMode, setDarkMode }) => {
+  const handleFetch = () => {};
+
+  const [state] = useAxios({
     axiosInstance: instance,
     method: "get",
     url: "/posts",
   });
-  console.log(posts);
+
+  const { data, loading, error } = state;
+
+  console.log(data);
 
   useEffect(() => {
-    setTodos(posts);
-  }, [posts]);
+    setTodos(data);
+  }, [data]);
 
   const [todos, setTodos] = useState([]);
 
@@ -38,7 +41,7 @@ const TodoList = ({ darkMode, setDarkMode }) => {
   const handleChange = (e) => {
     setValue(e.target.value);
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     const newId = todos.length ? todos[todos.length - 1].id + 1 : 1;
     const newItem = { id: newId, text: value, status: false };
     if (value) {
@@ -92,6 +95,7 @@ const TodoList = ({ darkMode, setDarkMode }) => {
         borderRadius: "5px",
       }}
     >
+      <Button onClick={handleFetch}>Fetch</Button>
       <Box>
         <Typography variant="h5" textAlign="center">
           Todo List App
@@ -171,4 +175,4 @@ const TodoList = ({ darkMode, setDarkMode }) => {
   );
 };
 
-export default TodoList;
+export default TodoList1;
