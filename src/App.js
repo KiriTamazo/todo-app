@@ -1,9 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Paper } from "@mui/material";
-
 import { useState } from "react";
 import TodoList from "./components/TodoList";
-import MuiSwitch from "./components/MuiSwitch";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -27,14 +25,7 @@ function App() {
           transition: "all .4s linear",
         }}
       >
-        <TodoList />
-        <MuiSwitch
-          sx={{ position: "absolute", top: "3%", right: "1%" }}
-          checked={!darkMode}
-          onChange={() => setDarkMode(!darkMode)}
-        >
-          Dark Mode
-        </MuiSwitch>
+        <TodoList darkMode={darkMode} setDarkMode={setDarkMode} />
       </Paper>
     </ThemeProvider>
   );

@@ -7,67 +7,99 @@ import {
   List,
   OutlinedInput,
   Typography,
+  ListItem,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ListItems from "./ListItems";
+import MuiSwitch from "./MuiSwitch";
+import instance from "../axios/instance";
+import useAxios from "../axios/useAxios";
+import Loading from "./loading/Loading";
 
-const TodoList = () => {
-  const [show, setShow] = useState(false);
-  const [todos, setTodos] = useState(
-    JSON.parse(localStorage.getItem("items")) ||
-      [
-        // { id: 1, text: "Hello! My Frinds" },
-        // { id: 2, text: "Hello! My Dear Frinds" },
-        // { id: 3, text: "Hello! My Frinds" },
-        // { id: 4, text: "Hello! My Dear Frinds" },
-        // { id: 5, text: "Hello! My Frinds" },
-        // { id: 6, text: "Hello! My Dear Frinds" },
-        // { id: 7, text: "Hello! My Frinds" },
-        // { id: 8, text: "Hello! My Dear Frinds" },
-        // { id: 9, text: "Hello! My Frinds" },
-        // { id: 10, text: "Hello! My Dear Frinds" },
-        // { id: 11, text: "Hello! My Frinds" },
-        // { id: 12, text: "Hello! My Dear Frinds" },
-      ]
-  );
+// Animation
+
+const TodoList1 = ({ darkMode, setDarkMode }) => {
+  const [state] = useAxios({
+    axiosInstance: instance,
+    method: "get",
+    url: "/posts",
+  });
+
+  const { data, loading, error } = state;
+
+  useEffect(() => {
+    setTodos(data);
+  }, [data]);
+
+  const [todos, setTodos] = useState([]);
+  const updateTodos = todos.slice().reverse();
 
   const [value, setValue] = useState("");
+  const [updateValue, setUpdateValue] = useState("");
+  const [checked, setChecked] = useState(false);
 
   const handleChange = (e) => {
     setValue(e.target.value);
   };
-  const handleSubmit = (e) => {
-    const id = todos.length ? todos[todos.length - 1].id + 1 : 1;
-    const newItem = { id, text: value };
+  const handleSubmit = async () => {
+    const newId = todos.length ? todos[todos.length - 1].id + 1 : 1;
+    const newItem = { id: newId, text: value, status: false };
+
     if (value) {
       setTodos([...todos, newItem]);
-      localStorage.setItem("items", JSON.stringify(todos));
       setValue("");
     }
+    instance.post("/posts", newItem);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const items = todos.filter((todo) => todo.id !== id);
-    localStorage.removeItem("items", JSON.stringify(items));
-    setTodos([...items]);
-  };
-  const handleEdit = () => {
-    setShow(true);
-  };
-  const handleUpdate = (id) => {};
-  const handleCancle = () => {
-    setShow(false);
+    setTodos(items);
+    await instance.delete(`/posts/${id}`);
   };
 
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(todos));
-  }, [todos]);
+  const handleEdit = (id) => {
+    const updateItem = todos.map((todo) => {
+      return todo.id === id
+        ? { ...todo, status: true }
+        : { ...todo, status: false };
+    });
+    setUpdateValue(todos.find((todo) => todo.id === id).text);
+    setTodos(updateItem);
+  };
+
+  const handleUpdate = async (id) => {
+    const updateItem = todos.map((todo) => {
+      return todo.id === id
+        ? { ...todo, text: updateValue, status: false }
+        : todo;
+    });
+    setTodos(updateItem);
+    const items = updateItem.find((item) => item.id === id);
+    await instance.put(`/posts/${id}`, items);
+  };
+
+  const handleCancle = (id) => {
+    const updateItem = todos.map((todo) =>
+      todo.id === id ? { ...todo, status: false } : todo
+    );
+
+    setTodos(updateItem);
+  };
+  const handleCheck = async (id) => {
+    const updateItem = todos.map((todo) => {
+      return todo.id === id ? { ...todo, checked: !todo.checked } : todo;
+    });
+    setTodos(updateItem);
+    const items = updateItem.find((item) => item.id === id);
+    await instance.put(`/posts/${id}`, items);
+  };
 
   return (
     <Container
       component="section"
       sx={{
-        // backgroundColor: "#eeeeee87",
+        position: "relative",
         padding: "20px",
         borderRadius: "5px",
       }}
@@ -86,49 +118,19 @@ const TodoList = () => {
         }}
         justifyContent="space-between"
       >
-        {show ? (
-          <>
-            <FormControl sx={{ flexGrow: 1 }}>
-              <OutlinedInput value={value} placeholder="Add New Todo Item" />
-            </FormControl>
-            <Stack spacing={2} direction="row">
-              <Button
-                onClick={handleUpdate}
-                variant="contained"
-                className="btn"
-              >
-                Update
-              </Button>
-              <Button
-                onClick={handleCancle}
-                variant="contained"
-                className="btn"
-              >
-                Cancle
-              </Button>
-            </Stack>
-          </>
-        ) : (
-          <>
-            <FormControl sx={{ flexGrow: 1 }}>
-              <OutlinedInput
-                value={value}
-                onChange={handleChange}
-                placeholder="Add New Todo Item"
-              />
-            </FormControl>
+        <FormControl sx={{ flexGrow: 1 }}>
+          <OutlinedInput
+            value={value}
+            onChange={handleChange}
+            placeholder="Add New Todo Item"
+          />
+        </FormControl>
 
-            <Stack spacing={2} direction="row">
-              <Button
-                variant="contained"
-                className="btn"
-                onClick={handleSubmit}
-              >
-                Add Task
-              </Button>
-            </Stack>
-          </>
-        )}
+        <Stack spacing={2} direction="row">
+          <Button variant="contained" className="btn" onClick={handleSubmit}>
+            Add Task
+          </Button>
+        </Stack>
       </Stack>
       {/* Todo Items List */}
 
@@ -141,20 +143,47 @@ const TodoList = () => {
             padding: "10px 0",
           }}
         >
-          {todos?.map((todo, index) => {
-            return (
-              <ListItems
-                key={index}
-                todo={todo}
-                handleDelete={handleDelete}
-                handleEdit={handleEdit}
-              />
-            );
-          })}
+          {loading && (
+            <>
+              <Loading />
+              <Loading />
+              <Loading />
+            </>
+          )}
+          {!todos && todos.length === 0 && !loading && (
+            <ListItem>No List Item</ListItem>
+          )}
+          {!loading &&
+            updateTodos?.map((todo, index) => {
+              return (
+                <ListItems
+                  key={index}
+                  todo={todo}
+                  checked={checked}
+                  setChecked={setChecked}
+                  updateValue={updateValue}
+                  setUpdateValue={setUpdateValue}
+                  handleChange={handleChange}
+                  handleCancle={handleCancle}
+                  handleDelete={handleDelete}
+                  handleEdit={handleEdit}
+                  handleCheck={handleCheck}
+                  handleUpdate={handleUpdate}
+                />
+              );
+            })}
         </List>
       </Stack>
+
+      <MuiSwitch
+        sx={{ position: "absolute", top: "20px", right: "20px" }}
+        checked={!darkMode}
+        onChange={() => setDarkMode(!darkMode)}
+      >
+        Dark Mode
+      </MuiSwitch>
     </Container>
   );
 };
 
-export default TodoList;
+export default TodoList1;
