@@ -15,6 +15,7 @@ import React from "react";
 const ListItems = ({
   todo,
   handleDelete,
+  handleCheck,
   handleEdit,
   handleCancle,
   updateValue,
@@ -27,9 +28,15 @@ const ListItems = ({
       className="list-item"
       sx={{ bgcolor: "background.paper", gap: 3 }}
     >
-      
       <ListItemIcon className="flex-center">
-        <Checkbox size="medium" edge="start" tabIndex={-1} disableRipple />
+        <Checkbox
+          checked={todo.checked}
+          onChange={() => handleCheck(todo.id)}
+          size="medium"
+          edge="start"
+          tabIndex={-1}
+          disableRipple
+        />
       </ListItemIcon>
 
       {todo.status === true && (
@@ -39,7 +46,12 @@ const ListItems = ({
           sx={{ padding: "2px", flexGrow: 1 }}
         />
       )}
-      {todo.status === false && <ListItemText primary={`${todo.text} `} />}
+      {todo.status === false && (
+        <ListItemText
+          sx={{ textDecoration: todo.checked ? "line-through" : "none" }}
+          primary={`${todo.text} `}
+        />
+      )}
 
       <Stack
         sx={{

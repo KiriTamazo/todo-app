@@ -16,9 +16,9 @@ import instance from "../axios/instance";
 import useAxios from "../axios/useAxios";
 import Loading from "./loading/Loading";
 
-const TodoList1 = ({ darkMode, setDarkMode }) => {
-  const handleFetch = () => {};
+// Animation
 
+const TodoList1 = ({ darkMode, setDarkMode }) => {
   const [state] = useAxios({
     axiosInstance: instance,
     method: "get",
@@ -27,16 +27,16 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
 
   const { data, loading, error } = state;
 
-  console.log(data);
-
   useEffect(() => {
     setTodos(data);
   }, [data]);
 
   const [todos, setTodos] = useState([]);
+  const updateTodos = todos.slice().reverse();
 
   const [value, setValue] = useState("");
   const [updateValue, setUpdateValue] = useState("");
+  const [checked, setChecked] = useState(false);
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -44,6 +44,7 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
   const handleSubmit = async () => {
     const newId = todos.length ? todos[todos.length - 1].id + 1 : 1;
     const newItem = { id: newId, text: value, status: false };
+
     if (value) {
       setTodos([...todos, newItem]);
       setValue("");
@@ -85,6 +86,14 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
 
     setTodos(updateItem);
   };
+  const handleCheck = async (id) => {
+    const updateItem = todos.map((todo) => {
+      return todo.id === id ? { ...todo, checked: !todo.checked } : todo;
+    });
+    setTodos(updateItem);
+    const items = updateItem.find((item) => item.id === id);
+    await instance.put(`/posts/${id}`, items);
+  };
 
   return (
     <Container
@@ -95,7 +104,6 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
         borderRadius: "5px",
       }}
     >
-      <Button onClick={handleFetch}>Fetch</Button>
       <Box>
         <Typography variant="h5" textAlign="center">
           Todo List App
@@ -146,17 +154,20 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
             <ListItem>No List Item</ListItem>
           )}
           {!loading &&
-            todos?.map((todo, index) => {
+            updateTodos?.map((todo, index) => {
               return (
                 <ListItems
                   key={index}
                   todo={todo}
+                  checked={checked}
+                  setChecked={setChecked}
                   updateValue={updateValue}
                   setUpdateValue={setUpdateValue}
                   handleChange={handleChange}
                   handleCancle={handleCancle}
                   handleDelete={handleDelete}
                   handleEdit={handleEdit}
+                  handleCheck={handleCheck}
                   handleUpdate={handleUpdate}
                 />
               );

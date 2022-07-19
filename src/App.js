@@ -1,6 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Paper } from "@mui/material";
-
 import { useState } from "react";
 import TodoList from "./components/TodoList";
 

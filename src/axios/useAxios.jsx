@@ -1,10 +1,14 @@
-import { useState, useEffect, useReducer } from "react";
-import { initialState, reducer } from "../reducer/reducer";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { error, loading, success } from "../redux/dataSlicer";
 
 const useAxios = (configObj) => {
   const { axiosInstance, method, url, requestConfig = {} } = configObj;
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const data = useSelector((state) => state.data);
+  const dispatch = useDispatch();
+
+  console.log(data);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -14,18 +18,17 @@ const useAxios = (configObj) => {
           ...requestConfig,
           signal: controller.signal,
         });
-        console.log(res.data, state);
-        dispatch({ type: "success", payload: res.data });
+        dispatch(success(res.data));
       } catch (err) {
-        dispatch({ type: "error", payload: err.message });
+        dispatch(error(err.message));
       } finally {
-        dispatch({ type: "loading", payload: false });
+        dispatch(loading());
       }
     };
     fetchData();
     return () => controller.abort();
   }, [axiosInstance, method, url]);
-
-  return [state];
+  console.log(data);
+  return [data];
 };
 export default useAxios;
