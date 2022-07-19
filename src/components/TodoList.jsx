@@ -17,7 +17,7 @@ import useAxios from "../axios/useAxios";
 import Loading from "./loading/Loading";
 
 // Animation
-
+// Api fetch Function
 const TodoList1 = ({ darkMode, setDarkMode }) => {
   const [state] = useAxios({
     axiosInstance: instance,
@@ -41,6 +41,7 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
   const handleChange = (e) => {
     setValue(e.target.value);
   };
+  // Add Function
   const handleSubmit = async () => {
     const newId = todos.length ? todos[todos.length - 1].id + 1 : 1;
     const newItem = { id: newId, text: value, status: false };
@@ -52,12 +53,13 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
     instance.post("/posts", newItem);
   };
 
+  // Delete Function
   const handleDelete = async (id) => {
     const items = todos.filter((todo) => todo.id !== id);
     setTodos(items);
     await instance.delete(`/posts/${id}`);
   };
-
+  // Edit Function
   const handleEdit = (id) => {
     const updateItem = todos.map((todo) => {
       return todo.id === id
@@ -68,6 +70,7 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
     setTodos(updateItem);
   };
 
+  // Update Function
   const handleUpdate = async (id) => {
     const updateItem = todos.map((todo) => {
       return todo.id === id
@@ -86,6 +89,8 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
 
     setTodos(updateItem);
   };
+
+  // Checkbox Functions
   const handleCheck = async (id) => {
     const updateItem = todos.map((todo) => {
       return todo.id === id ? { ...todo, checked: !todo.checked } : todo;
@@ -159,11 +164,8 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
                 <ListItems
                   key={index}
                   todo={todo}
-                  checked={checked}
-                  setChecked={setChecked}
                   updateValue={updateValue}
                   setUpdateValue={setUpdateValue}
-                  handleChange={handleChange}
                   handleCancle={handleCancle}
                   handleDelete={handleDelete}
                   handleEdit={handleEdit}

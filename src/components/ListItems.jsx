@@ -20,7 +20,6 @@ const ListItems = ({
   handleCancle,
   updateValue,
   setUpdateValue,
-  handleChange,
   handleUpdate,
 }) => {
   return (
