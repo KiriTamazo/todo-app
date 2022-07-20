@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Paper } from "@mui/material";
 import { useState } from "react";
-import TodoList from "./components/TodoList";
+import TodoList from "./components/TodoList/TodoList";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);

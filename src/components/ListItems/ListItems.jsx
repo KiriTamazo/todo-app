@@ -1,16 +1,49 @@
 import {
   Button,
   Checkbox,
+  Collapse,
   Input,
   ListItem,
   ListItemIcon,
   ListItemText,
+  Slide,
   Stack,
+  styled,
 } from "@mui/material";
-import "./ListItems.scss";
+import Style from "./ListItems.module.scss";
 import { Cancel, Delete, Edit, Save } from "@mui/icons-material";
+import { motion } from "framer-motion";
 
 import React from "react";
+
+// const ListsItems = styled(motion.li)(({ theme }) => ({
+//   background: theme.palette.background.paper,
+//   gap: 3,
+//   display: "flex",
+//   justifyContent: "center",
+//   alignItems: "center",
+//   transition: "all .5s ",
+// }));
+const ListsItems = styled(ListItem)(({ theme }) => ({
+  background: theme.palette.background.paper,
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "rgba(161, 161, 161, 14%) 0px 7px 4px 1px"
+      : "rgb(0 0 0 / 14%) 0px 7px 4px 1px",
+}));
+const item = {
+  hidden: {
+    y: -50,
+    opacity: 0,
+  },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      delay: 1,
+    },
+  },
+};
 
 const ListItems = ({
   todo,
@@ -23,11 +56,13 @@ const ListItems = ({
   handleUpdate,
 }) => {
   return (
-    <ListItem
-      className="list-item"
-      sx={{ bgcolor: "background.paper", gap: 3 }}
+    <ListsItems
+      className={`${Style.listItem} ${Style.flexCenter}`}
+      sx={{
+        bgcolor: "background.paper",
+      }}
     >
-      <ListItemIcon className="flex-center">
+      <ListItemIcon className={Style.flexCenter}>
         <Checkbox
           checked={todo.checked}
           onChange={() => handleCheck(todo.id)}
@@ -94,7 +129,7 @@ const ListItems = ({
           </>
         )}
       </Stack>
-    </ListItem>
+    </ListsItems>
   );
 };
 
