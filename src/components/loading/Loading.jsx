@@ -1,17 +1,22 @@
-import { ListItem, Skeleton } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import React from "react";
 
 const Loading = () => {
+  const loadings = [1, 2, 3];
+
   return (
-    <ListItem
-      disableGutters
-      sx={{
-        minHeight: { xs: "120px", md: "80px" },
-        alignItems: "unset",
-      }}
-    >
-      <Skeleton width="100%" />
-    </ListItem>
+    <Box sx={{ padding: "0 15px" }}>
+      {loadings.map((item) => (
+        <Skeleton
+          key={item}
+          width="100%"
+          sx={{
+            minHeight: { xs: "120px", md: "80px" },
+            alignItems: "unset",
+          }}
+        />
+      ))}
+    </Box>
   );
 };
 

@@ -8,8 +8,6 @@ const useAxios = (configObj) => {
   const data = useSelector((state) => state.data);
   const dispatch = useDispatch();
 
-  console.log(data);
-
   useEffect(() => {
     const controller = new AbortController();
     const fetchData = async () => {
@@ -28,7 +26,6 @@ const useAxios = (configObj) => {
     fetchData();
     return () => controller.abort();
   }, [axiosInstance, method, url]);
-  console.log(data);
   return [data];
 };
 export default useAxios;

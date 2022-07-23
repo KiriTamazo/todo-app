@@ -1,66 +1,49 @@
 import {
   Button,
   Checkbox,
-  Collapse,
   Input,
-  ListItem,
   ListItemIcon,
   ListItemText,
-  Slide,
   Stack,
   styled,
 } from "@mui/material";
 import Style from "./ListItems.module.scss";
 import { Cancel, Delete, Edit, Save } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import React, { useContext } from "react";
+import { TodoContext } from "../../TodoProvider/TodoProvider";
 
-import React from "react";
-
-// const ListsItems = styled(motion.li)(({ theme }) => ({
-//   background: theme.palette.background.paper,
-//   gap: 3,
-//   display: "flex",
-//   justifyContent: "center",
-//   alignItems: "center",
-//   transition: "all .5s ",
-// }));
-const ListsItems = styled(ListItem)(({ theme }) => ({
-  background: theme.palette.background.paper,
+const ListsItems = styled(motion.li)(({ theme }) => ({
+  background: theme.palette.mode === "dark" ? "#0f172a" : "#f8fafc",
+  gap: "20px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  transition: "all .5s ",
   boxShadow:
     theme.palette.mode === "dark"
-      ? "rgba(161, 161, 161, 14%) 0px 7px 4px 1px"
-      : "rgb(0 0 0 / 14%) 0px 7px 4px 1px",
+      ? "rgb(161 161 161 / 14%) 4px 5px 11px 2px"
+      : "rgb(0 0 0 / 14%) 4px 5px 11px 2px",
 }));
-const item = {
-  hidden: {
-    y: -50,
-    opacity: 0,
-  },
-  show: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      delay: 1,
-    },
-  },
-};
 
-const ListItems = ({
-  todo,
-  handleDelete,
-  handleCheck,
-  handleEdit,
-  handleCancle,
-  updateValue,
-  setUpdateValue,
-  handleUpdate,
-}) => {
+const ListItems = ({ todo, animation, index }) => {
+  const {
+    handleDelete,
+    handleCheck,
+    handleEdit,
+    handleCancle,
+    updateValue,
+    setUpdateValue,
+    handleUpdate,
+    loading,
+  } = useContext(TodoContext);
+
   return (
     <ListsItems
+      custom={index}
+      // initial={{ opacity: 0 }}
+      animate={animation}
       className={`${Style.listItem} ${Style.flexCenter}`}
-      sx={{
-        bgcolor: "background.paper",
-      }}
     >
       <ListItemIcon className={Style.flexCenter}>
         <Checkbox
@@ -77,7 +60,10 @@ const ListItems = ({
         <Input
           onChange={(e) => setUpdateValue(e.target.value)}
           value={updateValue}
-          sx={{ padding: "2px", flexGrow: 1 }}
+          sx={{
+            padding: "2px",
+            flexGrow: 1,
+          }}
         />
       )}
       {todo.status === false && (
