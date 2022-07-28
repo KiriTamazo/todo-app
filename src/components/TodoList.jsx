@@ -4,7 +4,7 @@ import instance from "../axios/instance";
 import useAxios from "../axios/useAxios";
 import Loading from "./loading/Loading";
 import Header from "./Header/Header";
-import Lists, { MemorizedList } from "./Lists/Lists";
+import { MemorizedList } from "./Lists/Lists";
 import Snack from "./Snack/Snack";
 import Switch from "./Switch/Switch";
 import Input from "./Input/Input";
@@ -47,7 +47,6 @@ const TodoList1 = ({ darkMode, setDarkMode }) => {
         setValue={setValue}
         todos={todos}
         setTodos={setTodos}
-        snack={snack}
         setSnack={setSnack}
       />
       {/* Todo Items List */}
