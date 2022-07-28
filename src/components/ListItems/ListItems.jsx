@@ -20,9 +20,10 @@ const ListItems = ({
   handleCancle,
   updateValue,
   setUpdateValue,
-  handleChange,
   handleUpdate,
 }) => {
+  console.log("ListItems Render");
+
   return (
     <ListItem
       className="list-item"
@@ -59,7 +60,7 @@ const ListItems = ({
           gap: "20px",
         }}
       >
-        {todo.status === true ? (
+        {todo.status ? (
           <>
             <Button
               onClick={() => handleUpdate(todo.id)}
