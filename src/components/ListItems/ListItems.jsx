@@ -20,9 +20,10 @@ const ListItems = ({
   handleCancle,
   updateValue,
   setUpdateValue,
-  handleChange,
   handleUpdate,
 }) => {
+  console.log("ListItems Render");
+
   return (
     <ListItem
       className="list-item"
@@ -39,14 +40,14 @@ const ListItems = ({
         />
       </ListItemIcon>
 
-      {todo.status === true && (
+      {todo.status && (
         <Input
           onChange={(e) => setUpdateValue(e.target.value)}
           value={updateValue}
           sx={{ padding: "2px", flexGrow: 1 }}
         />
       )}
-      {todo.status === false && (
+      {!todo.status && (
         <ListItemText
           sx={{ textDecoration: todo.checked ? "line-through" : "none" }}
           primary={`${todo.text} `}
@@ -59,7 +60,7 @@ const ListItems = ({
           gap: "20px",
         }}
       >
-        {todo.status === true ? (
+        {todo.status ? (
           <>
             <Button
               onClick={() => handleUpdate(todo.id)}
