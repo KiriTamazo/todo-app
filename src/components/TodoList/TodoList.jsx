@@ -31,12 +31,7 @@ const container = {
     },
   },
 };
-// const Lists = styled(motion.ul)(() => ({
-//   width: "100%",
-//   overflowY: "scroll",
-//   maxHeight: "600px",
-//   padding: "10px 0",
-// }));
+
 const item = {
   hidden: {
     opacity: 0,

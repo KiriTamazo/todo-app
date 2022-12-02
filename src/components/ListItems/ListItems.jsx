@@ -12,18 +12,10 @@ import {
 } from "@mui/material";
 import Style from "./ListItems.module.scss";
 import { Cancel, Delete, Edit, Save } from "@mui/icons-material";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 
 import React from "react";
 
-// const ListsItems = styled(motion.li)(({ theme }) => ({
-//   background: theme.palette.background.paper,
-//   gap: 3,
-//   display: "flex",
-//   justifyContent: "center",
-//   alignItems: "center",
-//   transition: "all .5s ",
-// }));
 const ListsItems = styled(ListItem)(({ theme }) => ({
   background: theme.palette.background.paper,
   boxShadow:
