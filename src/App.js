@@ -1,10 +1,15 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Paper } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoList from "./components/TodoList";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    setDarkMode(Boolean(JSON.parse(localStorage.getItem("darkMode"))));
+  }, []);
+  console.log(darkMode);
   const theme = createTheme({
     palette: {
       mode: darkMode ? "light" : "dark",
