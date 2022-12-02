@@ -22,8 +22,6 @@ const ListItems = ({
   setUpdateValue,
   handleUpdate,
 }) => {
-  console.log("ListItems Render");
-
   return (
     <ListItem
       className="list-item"

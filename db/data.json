@@ -2,13 +2,19 @@
   "posts": [
     {
       "id": 1,
-      "text": "1312",
+      "text": "123",
       "status": false,
       "checked": false
     },
     {
       "id": 2,
-      "text": "Abbba",
+      "text": "123aaaa",
+      "status": false,
+      "checked": false
+    },
+    {
+      "id": 3,
+      "text": "aaaa",
       "status": false,
       "checked": false
     }
