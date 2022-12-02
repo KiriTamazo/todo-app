@@ -9,7 +9,6 @@ function App() {
   useEffect(() => {
     setDarkMode(Boolean(JSON.parse(localStorage.getItem("darkMode"))));
   }, []);
-  console.log(darkMode);
   const theme = createTheme({
     palette: {
       mode: darkMode ? "light" : "dark",

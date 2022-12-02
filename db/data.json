@@ -4,19 +4,19 @@
       "id": 1,
       "text": "123",
       "status": false,
-      "checked": false
+      "checked": true
     },
     {
       "id": 2,
       "text": "123aaaa",
       "status": false,
-      "checked": false
+      "checked": true
     },
     {
       "id": 3,
       "text": "aaaa",
       "status": false,
-      "checked": false
+      "checked": true
     }
   ]
 }

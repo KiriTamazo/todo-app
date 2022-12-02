@@ -20,9 +20,17 @@ const dataSlicer = createSlice({
     loading: (state, action) => {
       return { ...state, loading: false };
     },
+    addTodo: (state, action) => {
+      state.push(action.payload);
+    },
+    deleteTodo: (state, action) => {
+      state.filter((item) => item.id !== action.payload.id);
+    },
+    editTodo: (state, action) => {},
   },
 });
 
-export const { success, error, loading } = dataSlicer.actions;
+export const { success, error, loading, addTodo, deleteTodo, editTodo } =
+  dataSlicer.actions;
 
 export default dataSlicer.reducer;
